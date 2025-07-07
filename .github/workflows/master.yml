@@ -72,7 +72,7 @@ jobs:
 
   build_macos:
     name: Build for macOS
-    runs-on: macos-latest  # This will run the job on a macOS environment
+    runs-on: macos-13  # This will run the job on a macOS environment
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
