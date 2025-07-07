@@ -63,17 +63,22 @@ jobs:
             add-apt-repository ppa:deadsnakes/ppa
             apt update
 
-            # Install Python 3.10, venv, and dev packages
+            # Install Python 3.10, venv, dev packages, Blender, and dependencies
             apt install -y python3.10 python3.10-venv python3.10-dev python3-pip
+            apt install -y blender
 
-            # Verify Python installation
-            python3.10 --version
+            # Reinstall pip to fix the ImportError issue
+            python3.10 -m ensurepip --upgrade
             python3.10 -m pip install --upgrade pip
 
-            # Install pyinstaller and bpy
+            # Create a virtual environment and activate it
+            python3.10 -m venv venv
+            source venv/bin/activate
+
+            # Install PyInstaller and other dependencies inside the virtual environment
             pip install pyinstaller bpy
 
-            # Build the executable using pyinstaller
+            # Build the executable using pyinstaller inside the venv
             pyinstaller --onefile 2gltf2.py
           "
 
