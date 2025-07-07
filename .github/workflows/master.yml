@@ -57,11 +57,23 @@ jobs:
 
           # Run the container and install necessary dependencies
           docker run --rm -v $(pwd):/workspace -w /workspace ubuntu:20.04 bash -c "
+            # Add deadsnakes PPA to install Python 3.10
             apt update
-            apt install -y python3.10 python3.10-venv python3.10-dev python3-pip pyinstaller blender
+            apt install -y software-properties-common
+            add-apt-repository ppa:deadsnakes/ppa
+            apt update
+
+            # Install Python 3.10, venv, and dev packages
+            apt install -y python3.10 python3.10-venv python3.10-dev python3-pip
+
+            # Verify Python installation
             python3.10 --version
             python3.10 -m pip install --upgrade pip
+
+            # Install pyinstaller and bpy
             pip install pyinstaller bpy
+
+            # Build the executable using pyinstaller
             pyinstaller --onefile 2gltf2.py
           "
 
@@ -70,3 +82,4 @@ jobs:
         with:
           name: linux-artifact
           path: ./dist/2gltf2  # Path to the generated executable
+
