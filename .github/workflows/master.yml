@@ -54,10 +54,13 @@ jobs:
         run: |
           # Pull and run the Ubuntu 20.04 Docker container
           docker pull ubuntu:20.04
+
+          # Run the container and install necessary dependencies
           docker run --rm -v $(pwd):/workspace -w /workspace ubuntu:20.04 bash -c "
-            apt update && apt install -y python3.10 python3-pip pyinstaller blender
-            python3 --version
-            pip install --upgrade pip
+            apt update
+            apt install -y python3.10 python3.10-venv python3.10-dev python3-pip pyinstaller blender
+            python3.10 --version
+            python3.10 -m pip install --upgrade pip
             pip install pyinstaller bpy
             pyinstaller --onefile 2gltf2.py
           "
