@@ -16,10 +16,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.10.18'  # Ensuring Python 3.10.18 is used
+      - name: Install Python 3.10.8 (x64)
+        run: |
+          $ErrorActionPreference = "Stop"
+          Invoke-WebRequest -Uri https://github.com/actions/python-versions/releases/download/3.10.8-11157050441/python-3.10.8-win32-x64.zip -OutFile python-3.10.8.zip
+          Expand-Archive python-3.10.8.zip -DestinationPath $env:ProgramFiles
+          $env:Path += ";$env:ProgramFiles\python-3.10.8-win32-x64"
+          python --version  # Confirm installation
 
       - name: Install PyInstaller
         run: |
@@ -30,7 +33,7 @@ jobs:
           pyinstaller --onefile 2gltf2.py  # Replace with the actual script you want to compile
 
       - name: Upload Windows Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v2
         with:
           name: windows-artifact
           path: ./dist/2gltf2.exe  # Path to the generated executable
