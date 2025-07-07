@@ -1,14 +1,24 @@
 import sys
 import bpy
 import os
-import shutil
 
-blender_bin = shutil.which("blender")
-if blender_bin:
-   print("Found:", blender_bin)
-   bpy.app.binary_path = blender_bin
-else:
-   print("Unable to find blender!")
+# Update the path for Blender 3.0.1
+sys.path.append('/usr/bin/blender')
+
+# Ensure bpy is available
+try:
+    import bpy
+except ImportError as e:
+    print("Error importing bpy:", e)
+    sys.exit(1)
+
+#   
+# Globals
+#
+
+#
+# Functions
+#
 
 current_directory = os.getcwd()
 
