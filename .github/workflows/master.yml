@@ -16,20 +16,25 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Install Python 3.10.8 (x64)
-        run: |
-          $ErrorActionPreference = "Stop"
-          Invoke-WebRequest -Uri https://github.com/actions/python-versions/releases/download/3.10.8-11157050441/python-3.10.8-win32-x64.zip -OutFile python-3.10.8.zip
-          Expand-Archive python-3.10.8.zip -DestinationPath $env:ProgramFiles
-          $env:Path += ";$env:ProgramFiles\python-3.10.8-win32-x64"
-          python --version  # Confirm installation
+      - name: Set up Python 3.10.8 (x64)
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10.8'
 
-      - name: Install PyInstaller
+      - name: Create virtual environment
         run: |
+          python -m venv venv
+
+      - name: Activate venv and install PyInstaller and bpy
+        run: |
+          .\venv\Scripts\activate
+          python -m pip install --upgrade pip
           pip install pyinstaller
+          pip install bpy  # Install bpy for Blender
 
-      - name: Build executable for Windows
+      - name: Build executable for Windows using venv
         run: |
+          .\venv\Scripts\activate
           pyinstaller --onefile 2gltf2.py  # Replace with the actual script you want to compile
 
       - name: Upload Windows Artifacts
@@ -55,13 +60,20 @@ jobs:
           sudo apt update
           sudo apt install -y blender  # Install Blender
 
-      - name: Install PyInstaller and bpy
+      - name: Create virtual environment
         run: |
+          python -m venv venv
+
+      - name: Activate venv and install PyInstaller and bpy
+        run: |
+          source venv/bin/activate
+          pip install --upgrade pip
           pip install pyinstaller
           pip install bpy  # Install bpy for Blender
 
-      - name: Build executable for Linux
+      - name: Build executable for Linux using venv
         run: |
+          source venv/bin/activate
           pyinstaller --onefile 2gltf2.py  # Replace with the actual script you want to compile
 
       - name: Upload Linux Artifacts
@@ -82,14 +94,20 @@ jobs:
         with:
           python-version: '3.10.8'  # Ensure Python 3.10.8 is used on macOS
 
-      - name: Install PyInstaller and bpy
+      - name: Create virtual environment
         run: |
+          python -m venv venv
+
+      - name: Activate venv and install PyInstaller and bpy
+        run: |
+          source venv/bin/activate
+          pip install --upgrade pip
           pip install pyinstaller
           pip install bpy  # Install bpy for Blender
 
-      - name: Build executable for macOS (Intel x64)
+      - name: Build executable for macOS (Intel x64) using venv
         run: |
-          # Use arch to force x64 compilation on M1/M2
+          source venv/bin/activate
           arch -x86_64 pyinstaller --onefile 2gltf2.py  # Replace with the actual script you want to compile
 
       - name: Upload macOS Artifacts
