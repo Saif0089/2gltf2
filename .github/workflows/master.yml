@@ -87,9 +87,10 @@ jobs:
           pip install pyinstaller
           pip install bpy  # Install bpy for Blender
 
-      - name: Build executable for macOS
+      - name: Build executable for macOS (Intel x64)
         run: |
-          pyinstaller --onefile 2gltf2.py  # Replace with the actual script you want to compile
+          # Use arch to force x64 compilation on M1/M2
+          arch -x86_64 pyinstaller --onefile 2gltf2.py  # Replace with the actual script you want to compile
 
       - name: Upload macOS Artifacts
         uses: actions/upload-artifact@v4
