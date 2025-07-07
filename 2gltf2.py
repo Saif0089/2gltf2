@@ -2,8 +2,9 @@ import sys
 import bpy
 import os
 
-# Update the path for Blender 3.0.1
-sys.path.append('/usr/share/blender/3.0/python/lib/python3.10/site-packages')
+# Add Blender's module path to sys.path to ensure bpy is found
+blender_modules_path = '/usr/share/blender/scripts/modules'
+sys.path.append(blender_modules_path)
 
 # Ensure bpy is available
 try:
@@ -11,14 +12,6 @@ try:
 except ImportError as e:
     print("Error importing bpy:", e)
     sys.exit(1)
-
-#   
-# Globals
-#
-
-#
-# Functions
-#
 
 current_directory = os.getcwd()
 
