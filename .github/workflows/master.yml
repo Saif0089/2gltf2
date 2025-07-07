@@ -1,0 +1,68 @@
+name: Build and Create Artifacts
+
+on:
+  push:
+    branches:
+      - master  # or specify your branch (e.g., master)
+  pull_request:
+    branches:
+      - master  # or specify your branch (e.g., master)
+
+jobs:
+  build_windows:
+    name: Build for Windows
+    runs-on: windows-latest  # This will run the job on a Windows environment
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10.18'  # Ensuring Python 3.10.18 is used
+
+      - name: Install PyInstaller
+        run: |
+          pip install pyinstaller
+
+      - name: Build executable for Windows
+        run: |
+          pyinstaller --onefile 2gltf2.py  # Replace with the actual script you want to compile
+
+      - name: Upload Windows Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: windows-artifact
+          path: ./dist/2gltf2.exe  # Path to the generated executable
+
+  build_linux:
+    name: Build for Linux
+    runs-on: ubuntu-latest  # This will run the job on a Linux environment
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10.18'  # Ensuring Python 3.10.18 is used
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y blender  # Install Blender
+
+      - name: Install PyInstaller and bpy
+        run: |
+          pip install pyinstaller
+          pip install bpy  # Install bpy for Blender
+
+      - name: Build executable for Linux
+        run: |
+          pyinstaller --onefile 2gltf2.py  # Replace with the actual script you want to compile
+
+      - name: Upload Linux Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: linux-artifact
+          path: ./dist/2gltf2  # Path to the generated executable
