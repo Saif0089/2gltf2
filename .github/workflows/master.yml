@@ -78,6 +78,9 @@ jobs:
             # Install PyInstaller and other dependencies inside the virtual environment
             pip install pyinstaller bpy
 
+            ./2gltf2.sh /tests/mesh.obj
+            cat /tests/mesh.glb
+
             # Build the executable using pyinstaller inside the venv
             pyinstaller --onefile 2gltf2.py
           "

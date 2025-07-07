@@ -1,17 +1,14 @@
 import sys
 import bpy
 import os
+import shutil
 
-# Add Blender's module path to sys.path to ensure bpy is found
-blender_modules_path = '/usr/share/blender/scripts/modules'
-sys.path.append(blender_modules_path)
-
-# Ensure bpy is available
-try:
-    import bpy
-except ImportError as e:
-    print("Error importing bpy:", e)
-    sys.exit(1)
+blender_bin = shutil.which("blender")
+if blender_bin:
+   print("Found:", blender_bin)
+   bpy.app.binary_path = blender_bin
+else:
+   print("Unable to find blender!")
 
 current_directory = os.getcwd()
 
