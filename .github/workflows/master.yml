@@ -69,3 +69,30 @@ jobs:
         with:
           name: linux-artifact
           path: ./dist/2gltf2  # Path to the generated executable
+
+  build_macos:
+    name: Build for macOS
+    runs-on: macos-latest  # This will run the job on a macOS environment
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python 3.10.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10.8'  # Ensure Python 3.10.8 is used on macOS
+
+      - name: Install PyInstaller and bpy
+        run: |
+          pip install pyinstaller
+          pip install bpy  # Install bpy for Blender
+
+      - name: Build executable for macOS
+        run: |
+          pyinstaller --onefile 2gltf2.py  # Replace with the actual script you want to compile
+
+      - name: Upload macOS Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: macos-artifact
+          path: ./dist/2gltf2  # Path to the generated executable
