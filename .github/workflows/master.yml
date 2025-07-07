@@ -43,75 +43,27 @@ jobs:
           name: windows-artifact
           path: ./dist/2gltf2.exe  # Path to the generated executable
 
-  build_linux:
-    name: Build for Linux
+   build_linux:
+    name: Build for Linux (with Docker for Older GLIBC)
     runs-on: ubuntu-latest  # This will run the job on a Linux environment
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.10.18'  # Ensuring Python 3.10.18 is used
-
-      - name: Install system dependencies
+      - name: Set up Docker for Ubuntu 20.04 (GLIBC 2.32)
         run: |
-          sudo apt update
-          sudo apt install -y blender  # Install Blender
-
-      - name: Create virtual environment
-        run: |
-          python -m venv venv
-
-      - name: Activate venv and install PyInstaller and bpy
-        run: |
-          source venv/bin/activate
-          pip install --upgrade pip
-          pip install pyinstaller
-          pip install bpy  # Install bpy for Blender
-
-      - name: Build executable for Linux using venv
-        run: |
-          source venv/bin/activate
-          pyinstaller --onefile 2gltf2.py  # Replace with the actual script you want to compile
+          # Pull and run the Ubuntu 20.04 Docker container
+          docker pull ubuntu:20.04
+          docker run --rm -v $(pwd):/workspace -w /workspace ubuntu:20.04 bash -c "
+            apt update && apt install -y python3.10 python3-pip pyinstaller blender
+            python3 --version
+            pip install --upgrade pip
+            pip install pyinstaller bpy
+            pyinstaller --onefile 2gltf2.py
+          "
 
       - name: Upload Linux Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v2
         with:
           name: linux-artifact
-          path: ./dist/2gltf2  # Path to the generated executable
-
-  build_macos:
-    name: Build for macOS
-    runs-on: macos-13  # This will run the job on a macOS environment
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Set up Python 3.10.8
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.10.8'  # Ensure Python 3.10.8 is used on macOS
-
-      - name: Create virtual environment
-        run: |
-          python -m venv venv
-
-      - name: Activate venv and install PyInstaller and bpy
-        run: |
-          source venv/bin/activate
-          pip install --upgrade pip
-          pip install pyinstaller
-          pip install bpy  # Install bpy for Blender
-
-      - name: Build executable for macOS (Intel x64) using venv
-        run: |
-          source venv/bin/activate
-          arch -x86_64 pyinstaller --onefile 2gltf2.py  # Replace with the actual script you want to compile
-
-      - name: Upload macOS Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: macos-artifact
           path: ./dist/2gltf2  # Path to the generated executable
