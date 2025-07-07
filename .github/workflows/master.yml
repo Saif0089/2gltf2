@@ -63,7 +63,7 @@ jobs:
           "
 
       - name: Upload Linux Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: linux-artifact
           path: ./dist/2gltf2  # Path to the generated executable
