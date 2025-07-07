@@ -43,7 +43,7 @@ jobs:
           name: windows-artifact
           path: ./dist/2gltf2.exe  # Path to the generated executable
 
-   build_linux:
+  build_linux:
     name: Build for Linux (with Docker for Older GLIBC)
     runs-on: ubuntu-latest  # This will run the job on a Linux environment
     steps:
